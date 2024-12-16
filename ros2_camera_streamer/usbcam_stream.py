@@ -16,7 +16,7 @@ class CameraStreamer(Node):
         self.frame_rate = self.get_parameter('frame_rate').value
         self.video_device = self.get_parameter('video_device').value
 
-        self.publisher_ = self.create_publisher(Image, self.camera_topic, self.frame_rate)
+        self.publisher_ = self.create_publisher(Image, self.camera_topic, 10)
         self.bridge = CvBridge()
         self.cap = cv2.VideoCapture(self.video_device)
 
@@ -24,7 +24,7 @@ class CameraStreamer(Node):
             self.get_logger().error('Unable to open camera')
             exit()
 
-        self.timer = self.create_timer(0.1, self.timer_callback)
+        self.timer = self.create_timer(1/self.frame_rate, self.timer_callback)
 
     def timer_callback(self):
         ret, frame = self.cap.read()
