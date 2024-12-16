@@ -7,9 +7,18 @@ from cv_bridge import CvBridge
 class CameraStreamer(Node):
     def __init__(self):
         super().__init__('camera_streamer')
-        self.publisher_ = self.create_publisher(Image, 'camera/image_raw', 10)
+
+        # Declare parameters for the camera topic name and frame rate
+        self.declare_parameter('camera_topic', '/camera/color/image_raw')
+        self.declare_parameter('frame_rate', 20)
+        self.declare_parameter('video_device', '/dev/video0')
+        self.camera_topic = self.get_parameter('camera_topic').value
+        self.frame_rate = self.get_parameter('frame_rate').value
+        self.video_device = self.get_parameter('video_device').value
+
+        self.publisher_ = self.create_publisher(Image, self.camera_topic, self.frame_rate)
         self.bridge = CvBridge()
-        self.cap = cv2.VideoCapture('/dev/video0')
+        self.cap = cv2.VideoCapture(self.video_device)
 
         if not self.cap.isOpened():
             self.get_logger().error('Unable to open camera')
