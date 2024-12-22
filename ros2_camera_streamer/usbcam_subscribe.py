@@ -10,12 +10,12 @@ class CameraSubscriber(Node):
         
         # Declare a parameter for the topic name
         self.declare_parameter('camera_topic', '/camera/color/image_raw')
-        self.topic_name = self.get_parameter('topic_name').value
+        topic = self.get_parameter('camera_topic').value
         
         # Set up the subscription
         self.subscription = self.create_subscription(
             Image,
-            self.topic_name,
+            topic,
             self.image_callback,
             10
         )
