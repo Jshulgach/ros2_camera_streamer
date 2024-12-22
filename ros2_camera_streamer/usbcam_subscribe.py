@@ -23,7 +23,7 @@ class CameraSubscriber(Node):
         
         # Initialize CvBridge for ROS <-> OpenCV conversion
         self.bridge = CvBridge()
-        self.get_logger().info(f"Subscribed to topic: {self.topic_name}")
+        self.get_logger().info(f"Subscribed to topic: {topic}")
 
     def image_callback(self, msg):
         try:
