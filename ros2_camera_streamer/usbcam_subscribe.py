@@ -9,7 +9,7 @@ class CameraSubscriber(Node):
         super().__init__('camera_subscriber')
         
         # Declare a parameter for the topic name
-        self.declare_parameter('topic_name', '/camera/image_raw')
+        self.declare_parameter('camera_topic', '/camera/color/image_raw')
         self.topic_name = self.get_parameter('topic_name').value
         
         # Set up the subscription
