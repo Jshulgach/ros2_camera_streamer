@@ -10,15 +10,10 @@ class CameraSubscriber(Node):
         
         # Declare a parameter for the topic name
         self.declare_parameter('camera_topic', '/camera/color/image_raw')
-        topic = self.get_parameter('camera_topic').value
-        
+
         # Set up the subscription
-        self.subscription = self.create_subscription(
-            Image,
-            topic,
-            self.image_callback,
-            10
-        )
+        topic = self.get_parameter('camera_topic').value
+        self.subscription = self.create_subscription(Image, topic, self.image_callback, 1)
         self.subscription  # Prevent unused variable warning
         
         # Initialize CvBridge for ROS <-> OpenCV conversion
