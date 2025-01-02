@@ -12,6 +12,8 @@ class CameraStreamer(Node):
         # Declare parameters for the camera topic name and frame rate
         self.declare_parameter('camera_topic', '/camera/color/image_raw')
         self.declare_parameter('frame_rate', 20)
+        self.declare_parameter('frame_width', 1280)
+        self.declare_parameter('frame_height', 720)
         self.declare_parameter('video_device', '/dev/video0')
         self.camera_topic = self.get_parameter('camera_topic').value
         self.frame_rate = self.get_parameter('frame_rate').value
@@ -25,6 +27,8 @@ class CameraStreamer(Node):
 
         # Initialize the camera
         self.cap = cv2.VideoCapture(self.video_device)
+        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.get_parameter('frame_width').value)
+        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.get_parameter('frame_height').value)
         if not self.cap.isOpened():
             self.get_logger().error('Unable to open camera')
             exit()
