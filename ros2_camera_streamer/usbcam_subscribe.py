@@ -10,21 +10,30 @@ class CameraSubscriber(Node):
         
         # Declare a parameter for the topic name
         self.declare_parameter('camera_topic', '/camera/color/image_raw')
+        self.declare_parameter('width', 1080)
+        self.declare_parameter('height', 720)
 
         # Set up the subscription
-        topic = self.get_parameter('camera_topic').value
-        self.subscription = self.create_subscription(Image, topic, self.image_callback, 1)
+        self.subscription = self.create_subscription(Image, self.get_param('camera_topic'), self.image_callback, 1)
         self.subscription  # Prevent unused variable warning
         
         # Initialize CvBridge for ROS <-> OpenCV conversion
         self.bridge = CvBridge()
-        self.get_logger().info(f"Subscribed to topic: {topic}")
+        self.get_logger().info(f"Subscribed: {self.get_param('camera_topic')}")
+
+    def get_param(self, name):
+        return self.get_parameter(name).value
 
     def image_callback(self, msg):
         try:
             # Convert the ROS Image message to an OpenCV image
             cv_image = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
-            
+
+            # Resize the image
+            width = self.get_param('width')
+            height = self.get_param('height')
+            cv_image = cv2.resize(cv_image, (width, height))
+
             # Display the image
             cv2.imshow('Camera Feed', cv_image)
             if cv2.waitKey(1) & 0xFF == ord('q'):
